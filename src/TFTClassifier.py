@@ -60,7 +60,9 @@ class PositionalEncoder(nn.Module):
 
 class TransformerClassifier(nn.Module):
 
-    def __init__(self, input_dim: int, output_dim: int, max_seq_len: int, d_model: int, nhead: int, d_hid: int,
+    def __init__(self, numerical_ft: list,
+                 categorical_ft: list,
+                 output_dim: int, max_seq_len: int, d_model: int, nhead: int, d_hid: int,
                  nlayers: int, dropout: float = 0.5):
         super().__init__()
         self.model_type = 'Transformer'
@@ -68,7 +70,7 @@ class TransformerClassifier(nn.Module):
         self.pos_encoder = PositionalEncoder(
             dropout=dropout,
             d_model=d_model)
-        self.embedding = nn.Linear(in_features=input_dim, out_features=d_model, bias=False)
+        self.embedding = nn.Linear(in_features=len(categorical_ft), out_features=d_model, bias=False)
         encoder_layers = TransformerEncoderLayer(d_model, nhead, d_hid, dropout)
         self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)
         self.flatten = nn.Flatten()
